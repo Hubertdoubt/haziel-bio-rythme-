@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10131d">
+<title>AstroBioRythme — Bio-Rythme des 72 Génies (méthode cabalistique)</title>
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
+<style>
+:root{
+  color-scheme:dark;--bg:#10131d;--panel:#191f2d;--panel2:#20293a;--gold:#d8b45b;
+  --gold2:#f0d99a;--ink:#f4f0e7;--muted:#a8b0c1;--line:#354057;
+  --green:#73d6a0;--red:#f08b8b;--blue:#9db8e8;--radius:18px;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#29334a 0%,var(--bg) 58%);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;padding:24px}
+.wrap{max-width:1100px;margin:auto}
+header{text-align:center;padding:28px 12px 24px}
+.eyebrow{color:var(--gold);letter-spacing:.22em;text-transform:uppercase;font-size:.72rem;font-weight:700}
+h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(1.9rem,4.5vw,3rem);line-height:1.15;margin:12px 0;color:var(--gold2)}
+header p{color:var(--muted);max-width:760px;margin:10px auto}
+.card{background:linear-gradient(145deg,rgba(31,40,58,.96),rgba(23,29,42,.98));border:1px solid var(--line);border-radius:var(--radius);padding:clamp(16px,3vw,24px);margin:16px 0;box-shadow:0 14px 36px #0002}
+h2{font:500 1.3rem Georgia,serif;color:var(--gold2);margin:0 0 12px}
+h3{font-size:1.05rem;color:var(--gold2);margin:18px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+label{display:block;color:var(--muted);font-size:.86rem;margin-bottom:6px}
+input{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;background:#101622;color:var(--ink);font:inherit}
+input:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+button{border:1px solid var(--gold);border-radius:10px;padding:11px 17px;background:var(--gold);color:#17140c;font-weight:750;font-size:.95rem;cursor:pointer}
+button.secondary{background:transparent;color:var(--gold2);border-color:var(--line)}
+button:hover{filter:brightness(1.08)}
+.hint,.note{font-size:.86rem;color:var(--muted)}
+.error{color:var(--red);min-height:1.4em;margin-top:8px}
+.results[hidden]{display:none}
+.hero{text-align:center;background:radial-gradient(circle at 50% 0,#493a1e,#20293a 70%);border-color:#8c7138}
+.kicker{color:var(--gold2);font-size:.82rem;text-transform:uppercase;letter-spacing:.12em}
+.sun{font:500 clamp(1.6rem,4vw,2.3rem) Georgia,serif;color:var(--gold2);margin:8px 0}
+.angel{font:500 clamp(1.5rem,3.5vw,2.1rem) Georgia,serif;margin:8px 0;color:#fff4d7}
+.meta{color:var(--muted);font-size:.92rem}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.metric{background:#101722a8;border:1px solid #675631;border-radius:12px;padding:11px}
+.metric small{display:block;color:var(--muted);font-size:.74rem}
+.metric strong{display:block;color:var(--gold2);margin-top:3px;font-size:.92rem}
+.cycle{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.cycle:last-child{border:0}
+.cycle-no{width:40px;height:40px;border:1px solid #8c7138;border-radius:50%;display:grid;place-items:center;color:var(--gold2);font-weight:700;font-size:.9rem}
+.cycle p{margin:2px 0;color:var(--muted);font-size:.86rem}
+.pill{white-space:nowrap;background:#302a1c;color:var(--gold2);padding:4px 9px;border-radius:99px;font-size:.78rem}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:480px;font-size:.88rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.05em}
+.planet-row td{vertical-align:middle}
+.badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:.75rem;font-weight:600}
+.badge.pos{background:#183126;color:var(--green);border:1px solid #438d68}
+.badge.neg{background:#351f27;color:var(--red);border:1px solid #a05252}
+.badge.neu{background:#1e2433;color:var(--muted);border:1px solid var(--line)}
+.aspect-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:6px;margin-top:12px}
+.aspect{background:#111824;border:1px solid var(--line);border-radius:8px;padding:7px;text-align:center;font-size:.74rem}
+.aspect b{display:block;font-size:.9rem}
+.aspect span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:.7rem}
+.aspect.active{border-color:var(--gold);background:#2a2418;box-shadow:0 0 0 1px #8c7138}
+.aspect.pos{border-color:#438d68;background:#183126;color:var(--green)}
+.aspect.neg{border-color:#a05252;background:#351f27;color:var(--red)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:.8rem;margin-top:8px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;background:var(--green)}
+.dot.red{background:var(--red)}.dot.gold{background:var(--gold)}
+.interpretation{color:#d9deea;line-height:1.65}
+.cta{background:linear-gradient(135deg,#3a2e14,#2a2418);border:1px solid #8c7138;border-radius:14px;padding:18px 20px;margin-top:18px;text-align:center}
+.cta a{display:inline-block;margin-top:10px;padding:12px 22px;background:var(--gold);color:#17140c;font-weight:700;border-radius:10px;text-decoration:none}
+.cta a:hover{filter:brightness(1.1)}
+footer{text-align:center;color:var(--muted);font-size:.78rem;padding:22px 8px}
+@media(max-width:700px){body{padding:12px}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.cycle{grid-template-columns:40px 1fr}.pill{grid-column:2;justify-self:start}}
+@media print{body{background:#fff;color:#111;padding:0}.card{background:#fff;color:#111;box-shadow:none;border:1px solid #bbb;break-inside:avoid}h1,h2,h3,.sun,.angel,.metric strong{color:#6b5012}.meta,.note,.hint,header p,.cycle p,.aspect span,footer{color:#444}.hero{background:#fff}.metric,.aspect{background:#f7f7f7}.actions,.form-card{display:none!important}.results[hidden]{display:block}.cta{border-color:#aaa}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Astrologie cabalistique · méthode des pages 51-61</div>
+  <h1>AstroBioRythme des 72 Génies</h1>
+  <p>Méthode technique : Soleil natal → points de départ des bio-rythmes de 72° → placement de toutes les planètes dans la grille 1-72 → Aspectomètre réduit (12°, 18°, 24°, 36°…).</p>
+</header>
+
+<section class="card form-card" aria-labelledby="form-title">
+  <h2 id="form-title">Données de naissance</h2>
+  <div class="grid">
+    <div><label for="birthDate">Date de naissance</label><input id="birthDate" type="date" value="1929-02-22" required></div>
+    <div><label for="birthTime">Heure locale (recommandée)</label><input id="birthTime" type="time" value="12:00"></div>
+  </div>
+  <p class="hint" style="margin:10px 0 0">L’heure est prise dans le fuseau de votre appareil. Sans heure précise, 12:00 reste une approximation correcte pour le Soleil et les planètes lentes.</p>
+
+  <h3 style="margin-top:22px">Positions planétaires manuelles (optionnel)</h3>
+  <p class="note">Pour coller <strong>exactement</strong> au thème du livre (ou à n’importe quel thème déjà calculé), cochez la case ci-dessous et saisissez les longitudes. Format accepté : <code>2°34 Poissons</code>, <code>5°26 Bélier</code>, <code>18.34 Bélier</code>, <code>245.5</code> (degrés décimaux 0-360), etc.</p>
+  <label style="display:flex;align-items:center;gap:8px;margin:12px 0;cursor:pointer">
+    <input type="checkbox" id="useManual" style="width:auto">
+    <span>Utiliser les positions manuelles ci-dessous (ignore le calcul astronomique)</span>
+  </label>
+
+  <div id="manualPanel" style="display:none;margin-top:8px">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Planète</th><th>Longitude (texte libre)</th></tr></thead>
+        <tbody id="manualInputs">
+          <!-- rempli en JS -->
+        </tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:8px">Exemple du livre (22-2-29) : Soleil 2°34 Poissons · Uranus 5°26 Bélier · Vénus 18°34 Bélier · Jupiter 5°38 Taureau · Mars 24°28 Gémeaux · Pluton 17° Cancer · Lune 4°20 Lion · Neptune 29°56 Lion · Saturne 28°45 Sagittaire · Mercure 9°6 Verseau.</p>
+    <div class="actions" style="margin-top:10px">
+      <button type="button" class="secondary" id="loadExampleBtn">Charger l’exemple du livre (22-2-29)</button>
+      <button type="button" class="secondary" id="clearManualBtn">Vider les champs</button>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="calculateBtn" type="button">Calculer le bio-rythme cabalistique</button>
+    <button id="resetBtn" class="secondary" type="button">Réinitialiser</button>
+  </div>
+  <div id="error" class="error" role="alert"></div>
+</section>
+
+<main id="results" class="results" hidden aria-live="polite">
+
+  <section class="card hero">
+    <div class="kicker">Soleil natal · Génie du Corps (grille 5°)</div>
+    <div class="sun" id="sunPosition">—</div>
+    <div class="angel" id="angelName">—</div>
+    <div class="meta" id="angelRange">—</div>
+    <div class="metrics" id="metrics"></div>
+  </section>
+
+  <section class="card">
+    <h2>1. Points de départ des bio-rythmes (tours de 72°)</h2>
+    <p class="note">Comme dans le livre : on part du Soleil natal et on ajoute successivement 72° dans l’ordre zodiacal. Ces cinq points marquent le début de chaque « tour » ou bio-rythme.</p>
+    <div id="cycles"></div>
+  </section>
+
+  <section class="card">
+    <h2>2. Placement des planètes dans la grille 1-72</h2>
+    <p class="note">Distance angulaire (sens zodiacal) entre le Soleil et chaque planète. Le numéro du Génie-degré = position dans le cycle de 72° (1 = conjonction au Soleil, 37 = opposition dans le cycle réduit, etc.).</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Planète</th><th>Longitude</th><th>Distance au Soleil</th><th>Génie-degré (1-72)</th><th>Génie activé</th></tr></thead>
+        <tbody id="planetsBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>3. Aspectomètre réduit (cycle de 72°)</h2>
+    <p class="note">Dans le bio-rythme, les aspects classiques sont proportionnels : opposition = 36°, carré = 18°, trigone = 24°, sextile = 12°, demi-sextile = 6°, etc. Les Génies situés à ces distances d’une planète sont « sensibilisés ».</p>
+    <div class="legend">
+      <span><i class="dot gold"></i> Conjonction / Génie activé par planète</span>
+      <span><i class="dot"></i> Aspects harmoniques (12°, 24°…)</span>
+      <span><i class="dot red"></i> Aspects de tension (18°, 36°…)</span>
+    </div>
+    <div class="aspect-grid" id="aspectGrid"></div>
+  </section>
+
+  <section class="card">
+    <h2>4. Lecture des Génies activés</h2>
+    <div class="interpretation" id="reading"></div>
+
+    <div class="cta">
+      <strong>Passez de la théorie à la relation vivante</strong>
+      <p style="margin:8px 0 0;color:var(--muted);font-size:.92rem">Le bio-rythme cabalistique montre les forces en jeu. Pour développer concrètement le contact avec votre Ange Gardien (et les 72), Serge Marjollet a transmis un protocole simple et gratuit.</p>
+      <a id="marjolletLink" href="https://les-anges-gardiens.com/mon-ange" target="_blank" rel="noopener">Découvrir mon Ange Gardien sur les-anges-gardiens.com →</a>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button type="button" id="printBtn">Imprimer / PDF</button>
+    <button type="button" class="secondary" id="csvBtn">Exporter CSV</button>
+  </div>
+</main>
+
+<footer>
+  Calculs écliptiques via Astronomy Engine (VSOP87) · Méthode inspirée des pages 51-61 du livre (bio-rythme des 72 Génies) · Usage symbolique et pédagogique · Non scientifique
+</footer>
+</div>
+
+<script>
+"use strict";
+
+/* ========== Données des 72 Génies ========== */
+const ANGELS = [
+  "Vehuiah","Jeliel","Sitael","Elemiah","Mahasiah","Lelahel","Achaiah","Cahetel",
+  "Haziel","Aladiah","Lauviah","Hahaiah","Iezalel","Mebahel","Hariel","Hakamiah",
+  "Lauviah II","Caliel","Leuviah","Pahaliah","Nelchael","Yeiayel","Melahel","Haheuiah",
+  "Nith-Haiah","Haaiah","Yeratel","Seheiah","Reiyel","Omael","Lecabel","Vasariah",
+  "Yehuiah","Lehahiah","Chavakiah","Menadel","Aniel","Haamiah","Rehael","Ieiazel",
+  "Hahahel","Mikael","Veuliah","Yelahiah","Sealiah","Ariel","Asaliah","Mihael",
+  "Vehuel","Daniel","Hahasiah","Imamiah","Nanael","Nithael","Mebahiah","Poyel",
+  "Nemamiah","Yeialel","Harahel","Mitzrael","Umabel","Iah-Hel","Anauel","Mehiel",
+  "Damabiah","Manakel","Eyael","Habuhiah","Rochel","Jabamiah","Haiaiel","Mumiah"
+];
+
+const CHOIRS = [
+  {name:"Séraphins",range:"1-8",sephirah:"Kether",planet:"Neptune / Uranus"},
+  {name:"Chérubins",range:"9-16",sephirah:"Hochmah",planet:"Uranus / Saturne"},
+  {name:"Trônes",range:"17-24",sephirah:"Binah",planet:"Saturne"},
+  {name:"Dominations",range:"25-32",sephirah:"Hesed",planet:"Jupiter"},
+  {name:"Puissances",range:"33-40",sephirah:"Geburah",planet:"Mars"},
+  {name:"Vertus",range:"41-48",sephirah:"Tiphereth",planet:"Soleil"},
+  {name:"Principautés",range:"49-56",sephirah:"Netzah",planet:"Vénus"},
+  {name:"Archanges",range:"57-64",sephirah:"Hod",planet:"Mercure"},
+  {name:"Anges",range:"65-72",sephirah:"Yesod",planet:"Lune"}
+];
+
+const SIGNS = ["Bélier","Taureau","Gémeaux","Cancer","Lion","Vierge","Balance","Scorpion","Sagittaire","Capricorne","Verseau","Poissons"];
+
+const PLANET_NAMES = {
+  Sun: "Soleil", Moon: "Lune", Mercury: "Mercure", Venus: "Vénus",
+  Mars: "Mars", Jupiter: "Jupiter", Saturn: "Saturne",
+  Uranus: "Uranus", Neptune: "Neptune", Pluto: "Pluton"
+};
+
+const BODY_LIST = ["Sun","Moon","Mercury","Venus","Mars","Jupiter","Saturn","Uranus","Neptune","Pluto"];
+
+/* ========== Utilitaires ========== */
+function norm(x){ return ((x % 360) + 360) % 360; }
+
+function zodiac(lon){
+  const n = norm(lon);
+  const sign = Math.floor(n / 30);
+  let deg = Math.floor(n % 30);
+  let min = Math.round((n % 30 - deg) * 60);
+  if(min === 60){ deg++; min = 0; }
+  return `${deg}°${String(min).padStart(2,"0")}′ ${SIGNS[sign]}`;
+}
+
+function angelAt(lon){
+  const index = Math.min(71, Math.floor(norm(lon) / 5));
+  return {
+    number: index + 1,
+    name: ANGELS[index],
+    choir: CHOIRS[Math.floor(index / 8)],
+    index,
+    start: index * 5,
+    end: (index + 1) * 5
+  };
+}
+
+function genieFromDegreeInCycle(degInCycle){
+  // degInCycle 0 → génie 1, 1 → 2, … 71 → 72
+  const d = Math.floor(norm(degInCycle)) % 72;
+  return { number: d + 1, name: ANGELS[d] };
+}
+
+function localBirthDate(dateValue, timeValue){
+  const [y,m,d] = dateValue.split("-").map(Number);
+  const [hh,mm] = (timeValue || "12:00").split(":").map(Number);
+  return new Date(y, m-1, d, hh||0, mm||0, 0, 0);
+}
+
+function dateFR(date){
+  return date.toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+}
+
+/* ========== Parseur de longitudes manuelles ========== */
+const SIGN_ALIASES = {
+  "belier":0,"bélier":0,"aries":0,"ar":0,
+  "taureau":1,"taurus":1,"ta":1,
+  "gemeaux":2,"gémeaux":2,"gemini":2,"ge":2,
+  "cancer":3,"cn":3,
+  "lion":4,"leo":4,"le":4,
+  "vierge":5,"virgo":5,"vi":5,
+  "balance":6,"libra":6,"li":6,
+  "scorpion":7,"scorpio":7,"sc":7,
+  "sagittaire":8,"sagittarius":8,"sg":8,
+  "capricorne":9,"capricorn":9,"cp":9,
+  "verseau":10,"aquarius":10,"aq":10,
+  "poissons":11,"pisces":11,"pi":11
+};
+
+function parseLongitude(text){
+  if(!text || !text.trim()) return null;
+  let s = text.trim().toLowerCase()
+    .replace(/,/g,".")
+    .replace(/°/g," ")
+    .replace(/′|'/g," ")
+    .replace(/″|"/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+
+  // pure decimal 0-360
+  if(/^\d+(\.\d+)?$/.test(s)){
+    const v = parseFloat(s);
+    if(v >= 0 && v < 360) return norm(v);
+  }
+
+  // formats: 2 34 poissons | 2.34 poissons | 5°26 bélier | 18 34 belier
+  const parts = s.split(" ");
+  let deg = 0, min = 0, signIdx = -1;
+
+  // chercher le signe
+  for(let i = parts.length-1; i >= 0; i--){
+    const p = parts[i].replace(/\./g,"");
+    if(SIGN_ALIASES.hasOwnProperty(p)){
+      signIdx = SIGN_ALIASES[p];
+      parts.splice(i,1);
+      break;
+    }
+  }
+
+  if(signIdx === -1){
+    // peut-être "2°34' Poissons" déjà nettoyé
+    return null;
+  }
+
+  // les nombres restants = degrés et minutes
+  const nums = parts.map(p => parseFloat(p)).filter(n => !isNaN(n));
+  if(nums.length === 0) return null;
+  deg = nums[0];
+  if(nums.length >= 2) min = nums[1];
+  // si un seul nombre décimal type 5.26 → degrés + fraction
+  if(nums.length === 1 && !Number.isInteger(nums[0])){
+    deg = Math.floor(nums[0]);
+    min = (nums[0] - deg) * 60;
+  }
+
+  return norm(signIdx * 30 + deg + min / 60);
+}
+
+/* ========== Exemple du livre (22-2-29) ========== */
+const BOOK_EXAMPLE = {
+  Sun:     "2°34 Poissons",
+  Uranus:  "5°26 Bélier",
+  Venus:   "18°34 Bélier",
+  Jupiter: "5°38 Taureau",
+  Mars:    "24°28 Gémeaux",
+  Pluto:   "17° Cancer",
+  Moon:    "4°20 Lion",
+  Neptune: "29°56 Lion",
+  Saturn:  "28°45 Sagittaire",
+  Mercury: "9°6 Verseau"
+};
+
+/* ========== Calcul Soleil offline (toujours disponible) ========== */
+function sunLongitudeApprox(date){
+  const jd = date.getTime()/86400000 + 2440587.5;
+  const n = jd - 2451545.0;
+  const L = norm(280.460 + 0.9856474 * n);
+  const g = norm(357.528 + 0.9856003 * n) * Math.PI / 180;
+  return norm(L + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g));
+}
+
+/* ========== Calcul des longitudes (Astronomy Engine si dispo, sinon Soleil seul) ========== */
+function getEclipticLongitudes(date){
+  const result = { Sun: sunLongitudeApprox(date) };
+  if(typeof Astronomy === "undefined") return result;
+  try{
+    const time = Astronomy.MakeTime(date);
+    for(const body of BODY_LIST){
+      if(body === "Sun") continue;
+      try{
+        result[body] = norm(Astronomy.EclipticLongitude(body, time));
+      }catch(e){ result[body] = null; }
+    }
+  }catch(e){ console.warn("Astronomy Engine indisponible", e); }
+  return result;
+}
+
+function getManualLongitudes(){
+  const result = {};
+  for(const body of BODY_LIST){
+    const input = document.getElementById("manual_"+body);
+    if(!input) continue;
+    const lon = parseLongitude(input.value);
+    result[body] = lon;
+  }
+  return result;
+}
+
+/* ========== UI positions manuelles ========== */
+function buildManualInputs(){
+  const tbody = document.getElementById("manualInputs");
+  tbody.replaceChildren();
+  for(const body of BODY_LIST){
+    const tr = document.createElement("tr");
+    const td1 = document.createElement("td");
+    td1.innerHTML = `<strong>${PLANET_NAMES[body]}</strong>`;
+    const td2 = document.createElement("td");
+    const inp = document.createElement("input");
+    inp.type = "text";
+    inp.id = "manual_"+body;
+    inp.placeholder = body === "Sun" ? "ex. 2°34 Poissons" : "ex. 5°26 Bélier";
+    inp.style.width = "100%";
+    td2.append(inp);
+    tr.append(td1, td2);
+    tbody.append(tr);
+  }
+}
+
+function loadBookExample(){
+  document.getElementById("useManual").checked = true;
+  document.getElementById("manualPanel").style.display = "block";
+  for(const body of BODY_LIST){
+    const inp = document.getElementById("manual_"+body);
+    if(inp) inp.value = BOOK_EXAMPLE[body] || "";
+  }
+  document.getElementById("birthDate").value = "1929-02-22";
+  document.getElementById("birthTime").value = "12:00";
+}
+
+function clearManual(){
+  for(const body of BODY_LIST){
+    const inp = document.getElementById("manual_"+body);
+    if(inp) inp.value = "";
+  }
+}
+
+/* ========== Logique principale du bio-rythme ========== */
+let lastData = null;
+
+function calculate(){
+  const dateVal = document.getElementById("birthDate").value;
+  const timeVal = document.getElementById("birthTime").value || "12:00";
+  const errorEl = document.getElementById("error");
+  errorEl.textContent = "";
+
+  if(!dateVal){
+    errorEl.textContent = "Veuillez renseigner une date de naissance.";
+    return;
+  }
+
+  const birth = localBirthDate(dateVal, timeVal);
+  if(Number.isNaN(birth.getTime()) || birth.getTime() > Date.now() + 86400000){
+    errorEl.textContent = "Date invalide ou située dans le futur.";
+    return;
+  }
+
+  // 1. Longitudes (automatique ou manuelles)
+  const useManual = document.getElementById("useManual").checked;
+  let longs;
+  if(useManual){
+    longs = getManualLongitudes();
+    if(longs.Sun == null){
+      errorEl.textContent = "En mode manuel, la position du Soleil est obligatoire (ex. 2°34 Poissons).";
+      return;
+    }
+  } else {
+    longs = getEclipticLongitudes(birth); // fonctionne toujours pour le Soleil
+  }
+  const sunLon = longs.Sun;
+  if(sunLon == null || isNaN(sunLon)){
+    errorEl.textContent = "Impossible d’obtenir la position du Soleil. Essayez le mode positions manuelles.";
+    return;
+  }
+
+  const mainAngel = angelAt(sunLon);
+
+  // Affichage Soleil + Génie principal
+  document.getElementById("sunPosition").textContent = `${zodiac(sunLon)} · ${sunLon.toFixed(2)}°`;
+  document.getElementById("angelName").textContent = `Génie n°${mainAngel.number} — ${mainAngel.name}`;
+  document.getElementById("angelRange").textContent = `Plage 5° : ${zodiac(mainAngel.start)} → ${zodiac(mainAngel.end - 0.0001)}`;
+
+  const metrics = [
+    ["Chœur", mainAngel.choir.name],
+    ["Sephirah", mainAngel.choir.sephirah],
+    ["Planète associée", mainAngel.choir.planet],
+    ["Position dans la plage", `${(sunLon - mainAngel.start).toFixed(2)}° / 5°`]
+  ];
+  document.getElementById("metrics").replaceChildren(...metrics.map(([k,v])=>{
+    const box = document.createElement("div");
+    box.className = "metric";
+    const small = document.createElement("small"); small.textContent = k;
+    const strong = document.createElement("strong"); strong.textContent = v;
+    box.append(small, strong);
+    return box;
+  }));
+
+  // 2. Points de départ des 5 bio-rythmes (0, 72, 144, 216, 288)
+  const cyclesContainer = document.getElementById("cycles");
+  cyclesContainer.replaceChildren();
+  const cycleStarts = [];
+  for(let i = 0; i < 5; i++){
+    const target = norm(sunLon + i * 72);
+    const a = angelAt(target);
+    cycleStarts.push({index:i, lon:target, angel:a});
+
+    const row = document.createElement("div");
+    row.className = "cycle";
+    const no = document.createElement("div");
+    no.className = "cycle-no";
+    no.textContent = String(i + 1);
+    const body = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = i === 0 ? "Départ (Soleil natal)" : `+${i*72}° — début du tour ${i+1}`;
+    const detail = document.createElement("p");
+    detail.textContent = `${zodiac(target)} · Génie n°${a.number} ${a.name} (${a.choir.name})`;
+    body.append(title, detail);
+    const pill = document.createElement("div");
+    pill.className = "pill";
+    pill.textContent = `Tour ${i+1}`;
+    row.append(no, body, pill);
+    cyclesContainer.append(row);
+  }
+
+  // 3. Placement des planètes dans la grille 1-72
+  // Distance zodiacale = (P - Sun + 360) % 360
+  // Génie-degré ≈ floor(distance) % 72 + 1  (comme dans l’exemple du livre)
+  const planetPlacements = [];
+  const tbody = document.getElementById("planetsBody");
+  tbody.replaceChildren();
+
+  for(const body of BODY_LIST){
+    if(body === "Sun") continue; // le Soleil est la référence (position 1)
+    const lon = longs[body];
+    if(lon == null) continue;
+
+    const dist = norm(lon - sunLon);
+    // Dans le livre : 33° → n°33, 46° →46, 63°4' →64
+    // On utilise Math.round pour coller au mieux aux exemples
+    let genieNum = Math.round(dist) % 72;
+    if(genieNum === 0 && dist > 0.5) genieNum = 72;
+    if(genieNum === 0) genieNum = 1; // conjonction exacte
+    const genie = { number: genieNum, name: ANGELS[genieNum - 1] };
+
+    planetPlacements.push({
+      body,
+      name: PLANET_NAMES[body],
+      lon,
+      dist,
+      genieNum,
+      genieName: genie.name
+    });
+
+    const tr = document.createElement("tr");
+    tr.className = "planet-row";
+    tr.innerHTML = `
+      <td><strong>${PLANET_NAMES[body]}</strong></td>
+      <td>${zodiac(lon)}</td>
+      <td>${dist.toFixed(2)}°</td>
+      <td><span class="badge neu">${genieNum}</span></td>
+      <td>n°${genieNum} — ${genie.name}</td>
+    `;
+    tbody.append(tr);
+  }
+
+  // Ajouter le Soleil lui-même (position 1)
+  const sunRow = document.createElement("tr");
+  sunRow.innerHTML = `
+    <td><strong>Soleil</strong></td>
+    <td>${zodiac(sunLon)}</td>
+    <td>0.00°</td>
+    <td><span class="badge pos">1</span></td>
+    <td>n°1 — ${ANGELS[0]} (référence)</td>
+  `;
+  tbody.insertBefore(sunRow, tbody.firstChild);
+
+  // 4. Aspectomètre réduit — marquer les Génies activés
+  // Positions occupées par les planètes
+  const occupied = new Set(planetPlacements.map(p => p.genieNum));
+  occupied.add(1); // Soleil
+
+  // Aspects réduits (dans le cycle de 72°)
+  // Harmoniques : 12 (sextile), 24 (trigone), 6 (demi-sextile), 30…
+  // Tensions : 18 (carré), 36 (opposition), 9, 27…
+  const HARMONIC = new Set([6,12,24,30,48,60]); // distances favorables
+  const TENSION  = new Set([9,18,27,36,45,54,63]); // distances difficiles
+
+  const activated = new Map(); // genieNum → {type, fromPlanets[]}
+
+  for(const p of planetPlacements){
+    const base = p.genieNum;
+    // Conjonction
+    if(!activated.has(base)) activated.set(base, {type:"conjunction", sources:[]});
+    activated.get(base).sources.push(p.name);
+
+    // Aspects depuis cette planète
+    for(let offset = 1; offset < 72; offset++){
+      const target = ((base - 1 + offset) % 72) + 1;
+      let type = null;
+      if(HARMONIC.has(offset) || HARMONIC.has(72 - offset)) type = "harmonic";
+      else if(TENSION.has(offset) || TENSION.has(72 - offset)) type = "tension";
+      if(!type) continue;
+
+      if(!activated.has(target)) activated.set(target, {type, sources:[]});
+      // On privilégie la conjonction si elle existe déjà
+      if(activated.get(target).type !== "conjunction"){
+        activated.get(target).type = type;
+      }
+      activated.get(target).sources.push(`${p.name} (${offset}°)`);
+    }
+  }
+
+  // Grille visuelle 1-72
+  const grid = document.getElementById("aspectGrid");
+  grid.replaceChildren();
+  for(let i = 1; i <= 72; i++){
+    const cell = document.createElement("div");
+    cell.className = "aspect";
+    const info = activated.get(i);
+    if(info){
+      if(info.type === "conjunction") cell.classList.add("active");
+      else if(info.type === "harmonic") cell.classList.add("pos");
+      else if(info.type === "tension") cell.classList.add("neg");
+    }
+    const num = document.createElement("b");
+    num.textContent = String(i).padStart(2,"0");
+    const name = document.createElement("span");
+    name.textContent = ANGELS[i-1];
+    cell.title = info
+      ? `Génie ${i} ${ANGELS[i-1]} — ${info.type} via ${info.sources.slice(0,3).join(", ")}`
+      : `Génie ${i} ${ANGELS[i-1]}`;
+    cell.append(num, name);
+    grid.append(cell);
+  }
+
+  // 5. Texte de lecture
+  const activatedList = [...activated.entries()]
+    .filter(([,v]) => v.type === "conjunction")
+    .map(([num]) => `n°${num} ${ANGELS[num-1]}`)
+    .join(", ");
+
+  const reading = document.getElementById("reading");
+  reading.innerHTML = `
+    <p>Votre <strong>Soleil natal</strong> se trouve à ${zodiac(sunLon)}. Dans la grille traditionnelle des 72 Génies (5° chacun), il active le <strong>Génie n°${mainAngel.number} — ${mainAngel.name}</strong> du chœur des ${mainAngel.choir.name}.</p>
+    <p>En suivant la méthode du livre, on compte 72° successifs à partir de ce Soleil pour définir les cinq points de départ des bio-rythmes. Ensuite, chaque planète est placée dans la grille 1-72 selon sa distance zodiacale au Soleil. Les positions occupées (et les aspects réduits de 12°, 18°, 24°, 36°…) sensibilisent certains Génies.</p>
+    <p><strong>Génies directement activés par les planètes</strong> (conjonctions dans le cycle) : ${activatedList || "aucun en plus du Soleil"}.</p>
+    <p>Ces Génies « allumés » indiquent, selon la tradition cabalistique exposée dans le livre, les forces qui colorent la volonté, les périodes favorables ou tendues, et les domaines où l’énergie planétaire pousse les vertus ou les défis du Génie concerné.</p>
+    <p style="margin-top:14px"><em>Cette page reproduit la logique technique des pages 51-61 (bio-rythme + Aspectomètre réduit). Elle reste une lecture symbolique.</em></p>
+  `;
+
+  // Lien Marjollet avec le Génie principal
+  const link = document.getElementById("marjolletLink");
+  link.href = `https://les-anges-gardiens.com/mon-ange`;
+  link.textContent = `Aller plus loin avec ${mainAngel.name} sur les-anges-gardiens.com →`;
+
+  lastData = { sunLon, mainAngel, planetPlacements, cycleStarts, birth };
+
+  document.getElementById("results").hidden = false;
+}
+
+/* ========== Événements ========== */
+document.getElementById("calculateBtn").addEventListener("click", calculate);
+document.getElementById("resetBtn").addEventListener("click", ()=>{
+  document.getElementById("birthDate").value = "1929-02-22";
+  document.getElementById("birthTime").value = "12:00";
+  document.getElementById("error").textContent = "";
+  document.getElementById("results").hidden = true;
+});
+document.getElementById("printBtn").addEventListener("click", ()=> window.print());
+document.getElementById("csvBtn").addEventListener("click", ()=>{
+  if(!lastData) return;
+  const rows = [
+    ["Planete","Longitude","Distance_Soleil","Genie_degre","Nom_Genie"],
+    ...lastData.planetPlacements.map(p => [
+      p.name, p.lon.toFixed(4), p.dist.toFixed(4), p.genieNum, p.genieName
+    ])
+  ];
+  const csv = "\uFEFF" + rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(";")).join("\r\n");
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "astrobiorythme-planetes.csv"; a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById("useManual").addEventListener("change", function(){
+  document.getElementById("manualPanel").style.display = this.checked ? "block" : "none";
+});
+document.getElementById("loadExampleBtn").addEventListener("click", ()=>{
+  loadBookExample();
+});
+document.getElementById("clearManualBtn").addEventListener("click", clearManual);
+
+window.addEventListener("DOMContentLoaded", ()=>{
+  buildManualInputs();
+  // Le Soleil est toujours calculable (formule offline).
+  // Les autres planètes nécessitent Astronomy Engine ou le mode manuel.
+  calculate();
+});
+</script>
+</body>
+</html>
