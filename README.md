@@ -1,2 +1,2 @@
-# haziel-bio-rythme-
+Le site https://hubertdoubt.github.io/astro-biorhythme/ s'occupe de donner une vue précise des relations entre les cycles astrologiques et (cabalistiques, ici on parle d'Ange ou génie) puisqu'ils sont liés chacun à une planète, on peut alors trouver les relations qui peuvent être améliorées avec les anges selon notre horoscope. Si vous avez les noms des anges avec lesquelles vous êtes en tension, vous pouvez les invoquer avec l'aide des livres d'Haziel notamment :" à chaque jours son ange gardien". histoire d'améliorer votre situation sur terre, de vous imprégner de leurs vertus ce qu'Haziel l'Angéologue n'a pas cessé de prêcher.   
 Astrologie cabalistique (version débutante.)
